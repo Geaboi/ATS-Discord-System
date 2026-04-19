@@ -1,0 +1,35 @@
+name: Deploy to VPS
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy via SSH
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            set -e
+            cd /opt/ats
+
+            echo "Pulling latest code..."
+            git pull origin main
+
+            echo "Building and restarting services..."
+            docker compose pull ollama 2>/dev/null || true
+            docker compose up -d --build --remove-orphans
+
+            echo "Running database migrations..."
+            docker compose exec -T api alembic upgrade head
+
+            echo "Cleaning up old images..."
+            docker image prune -f
+
+            echo "Deployment complete!"
+            docker compose ps
