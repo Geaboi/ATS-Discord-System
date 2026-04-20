@@ -16,6 +16,7 @@ export interface Job {
   posted_at: string | null;
   scraped_at: string;
   experience_level: string | null;
+  resume_match: number | null;
   notified: boolean;
 }
 
@@ -92,4 +93,9 @@ export interface ScrapeRun {
   jobs_found: number;
   jobs_added: number;
   error: string | null;
+}
+
+export interface ResumeAnalysis {
+  strengths: string[];
+  weaknesses: string[];
 }

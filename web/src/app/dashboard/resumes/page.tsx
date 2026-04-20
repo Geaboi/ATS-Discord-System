@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { api } from "@/lib/api";
-import { Resume, TailorStatus, Job, JobListResponse } from "@/lib/types";
+import { Resume, TailorStatus, Job, JobListResponse, ResumeAnalysis } from "@/lib/types";
 import { timeAgo } from "@/lib/utils";
 
 function TailorModal({
@@ -166,6 +166,9 @@ export default function ResumesPage() {
   const [uploading, setUploading] = useState(false);
   const [tailoring, setTailoring] = useState<Resume | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
+  const [analyzing, setAnalyzing] = useState<string | null>(null);
+  const [analysis, setAnalysis] = useState<Record<string, ResumeAnalysis>>({});
+  const [analysisLoading, setAnalysisLoading] = useState<string | null>(null);
 
   async function load() {
     const data = await api.get<Resume[]>("/api/resumes");
@@ -194,6 +197,23 @@ export default function ResumesPage() {
     if (!confirm("Delete this resume?")) return;
     await api.delete(`/api/resumes/${id}`);
     setResumes((prev) => prev.filter((r) => r.id !== id));
+  }
+
+  async function handleAnalyze(id: string) {
+    if (analyzing === id) {
+      setAnalyzing(null);
+      return;
+    }
+    setAnalyzing(id);
+    if (!analysis[id]) {
+      setAnalysisLoading(id);
+      try {
+        const data = await api.get<ResumeAnalysis>(`/api/resumes/${id}/analysis`);
+        setAnalysis((prev) => ({ ...prev, [id]: data }));
+      } finally {
+        setAnalysisLoading(null);
+      }
+    }
   }
 
   const masters = resumes.filter((r) => r.is_master);
@@ -237,32 +257,74 @@ export default function ResumesPage() {
             ) : (
               <div className="space-y-2">
                 {masters.map((r) => (
-                  <div key={r.id} className="bg-white rounded-xl border border-slate-200 px-4 py-3 flex items-center justify-between">
-                    <div>
-                      <p className="font-medium text-sm text-slate-900">{r.name}</p>
-                      <p className="text-xs text-slate-400 mt-0.5">{r.file_type.toUpperCase()} · {timeAgo(r.created_at)}</p>
+                  <div key={r.id}>
+                    <div className="bg-white rounded-xl border border-slate-200 px-4 py-3 flex items-center justify-between">
+                      <div>
+                        <p className="font-medium text-sm text-slate-900">{r.name}</p>
+                        <p className="text-xs text-slate-400 mt-0.5">{r.file_type.toUpperCase()} · {timeAgo(r.created_at)}</p>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={() => handleAnalyze(r.id)}
+                          className={`text-xs font-medium transition-colors ${
+                            analyzing === r.id ? "text-primary" : "text-slate-500 hover:text-slate-700"
+                          }`}
+                        >
+                          {analyzing === r.id ? "Hide Analysis" : "Analysis"}
+                        </button>
+                        <button
+                          onClick={() => setTailoring(r)}
+                          className="text-xs font-medium text-primary hover:text-primary/80 transition-colors"
+                        >
+                          Tailor →
+                        </button>
+                        <a
+                          href={`/api/resumes/${r.id}/download`}
+                          download
+                          className="text-xs text-slate-400 hover:text-slate-600 transition-colors"
+                        >
+                          Download
+                        </a>
+                        <button
+                          onClick={() => handleDelete(r.id)}
+                          className="text-xs text-red-400 hover:text-red-600 transition-colors"
+                        >
+                          Delete
+                        </button>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <button
-                        onClick={() => setTailoring(r)}
-                        className="text-xs font-medium text-primary hover:text-primary/80 transition-colors"
-                      >
-                        Tailor →
-                      </button>
-                      <a
-                        href={`/api/resumes/${r.id}/download`}
-                        download
-                        className="text-xs text-slate-400 hover:text-slate-600 transition-colors"
-                      >
-                        Download
-                      </a>
-                      <button
-                        onClick={() => handleDelete(r.id)}
-                        className="text-xs text-red-400 hover:text-red-600 transition-colors"
-                      >
-                        Delete
-                      </button>
-                    </div>
+                    {analyzing === r.id && (
+                      <div className="border border-t-0 border-slate-200 rounded-b-xl bg-slate-50 px-4 py-4">
+                        {analysisLoading === r.id ? (
+                          <p className="text-sm text-slate-400">Loading analysis…</p>
+                        ) : analysis[r.id]?.strengths.length === 0 && analysis[r.id]?.weaknesses.length === 0 ? (
+                          <p className="text-sm text-slate-400">No analysis yet — scrape some jobs first.</p>
+                        ) : (
+                          <div className="grid grid-cols-2 gap-4">
+                            <div>
+                              <p className="text-xs font-semibold text-emerald-600 uppercase tracking-wide mb-2">Strengths</p>
+                              <ul className="space-y-1">
+                                {analysis[r.id]?.strengths.map((s, i) => (
+                                  <li key={i} className="text-xs text-slate-700 flex gap-1.5">
+                                    <span className="text-emerald-500 shrink-0">✓</span>{s}
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                            <div>
+                              <p className="text-xs font-semibold text-red-500 uppercase tracking-wide mb-2">Weaknesses</p>
+                              <ul className="space-y-1">
+                                {analysis[r.id]?.weaknesses.map((w, i) => (
+                                  <li key={i} className="text-xs text-slate-700 flex gap-1.5">
+                                    <span className="text-red-400 shrink-0">✗</span>{w}
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </div>
                 ))}
               </div>

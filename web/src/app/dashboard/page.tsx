@@ -110,8 +110,17 @@ function JobCard({ job, onApply }: { job: Job; onApply: (jobId: string) => void 
         </div>
 
         {/* Score */}
-        <div className="shrink-0 flex flex-col items-end gap-1">
-          <ScoreBar score={job.relevance_score} />
+        <div className="shrink-0 flex flex-col items-end gap-1.5">
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-slate-400">Match</span>
+            <ScoreBar score={job.relevance_score} />
+          </div>
+          {job.resume_match !== null && (
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-slate-400">Resume</span>
+              <ScoreBar score={job.resume_match} />
+            </div>
+          )}
           <span className="text-xs text-slate-400">{timeAgo(job.scraped_at)}</span>
         </div>
       </div>
