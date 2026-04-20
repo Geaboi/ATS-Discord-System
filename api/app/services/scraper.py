@@ -83,6 +83,7 @@ async def _run_source(source_name: str, module_path: str, func_name: str) -> Non
                     tags=score_result["tags"],
                     relevance_score=score_result["score"],
                     score_reasoning=score_result["reasoning"],
+                    experience_level=score_result.get("experience_level", "unknown"),
                     status="new",
                     notified=False,
                 )
