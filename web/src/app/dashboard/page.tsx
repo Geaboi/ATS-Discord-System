@@ -100,8 +100,12 @@ function JobCard({ job, onApply }: { job: Job; onApply: (jobId: string) => void 
                 <span className="text-emerald-600 font-medium">{salary}</span>
               </>
             )}
-            <span className="text-slate-300">·</span>
-            <span>{timeAgo(job.posted_at ?? job.scraped_at)}</span>
+            {job.posted_at && (
+              <>
+                <span className="text-slate-300">·</span>
+                <span>{timeAgo(job.posted_at)}</span>
+              </>
+            )}
           </div>
         </div>
 

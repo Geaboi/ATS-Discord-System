@@ -38,7 +38,10 @@ async def list_jobs(
         stmt = stmt.where(
             Job.title.ilike(like) | Job.company.ilike(like) | Job.description.ilike(like)
         )
+    _VALID_LEVELS = {"intern", "entry", "mid", "senior", "unknown"}
     if experience_level:
+        if experience_level not in _VALID_LEVELS:
+            raise HTTPException(status_code=422, detail=f"experience_level must be one of {sorted(_VALID_LEVELS)}")
         stmt = stmt.where(Job.experience_level == experience_level)
 
     count_stmt = select(func.count()).select_from(stmt.subquery())

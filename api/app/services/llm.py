@@ -77,7 +77,7 @@ async def score_job(
                     "prompt": prompt,
                     "stream": False,
                     "format": "json",
-                    "options": {"temperature": 0.1, "num_predict": 200},
+                    "options": {"temperature": 0.1, "num_predict": 350},
                 },
             )
             response.raise_for_status()
