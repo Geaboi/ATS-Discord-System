@@ -16,7 +16,9 @@ depends_on: Union[str, Sequence[str], None] = None
 
 def upgrade() -> None:
     op.add_column("jobs", sa.Column("experience_level", sa.String(), nullable=True))
+    op.create_index("idx_jobs_exp_level", "jobs", ["experience_level"])
 
 
 def downgrade() -> None:
+    op.drop_index("idx_jobs_exp_level", table_name="jobs")
     op.drop_column("jobs", "experience_level")

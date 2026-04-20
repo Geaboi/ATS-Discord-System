@@ -24,6 +24,7 @@ async def list_jobs(
     status_filter: Optional[str] = Query(None, alias="status"),
     min_score: Optional[float] = Query(None),
     q: Optional[str] = Query(None),
+    experience_level: Optional[str] = Query(None),
     db: AsyncSession = Depends(get_db),
     _: dict = Depends(get_current_user),
 ):
@@ -37,6 +38,8 @@ async def list_jobs(
         stmt = stmt.where(
             Job.title.ilike(like) | Job.company.ilike(like) | Job.description.ilike(like)
         )
+    if experience_level:
+        stmt = stmt.where(Job.experience_level == experience_level)
 
     count_stmt = select(func.count()).select_from(stmt.subquery())
     total = (await db.execute(count_stmt)).scalar_one()
