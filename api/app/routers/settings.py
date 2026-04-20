@@ -43,6 +43,10 @@ async def update_settings(
         row.score_threshold = body.score_threshold
     if body.scrape_interval is not None:
         row.scrape_interval = body.scrape_interval
+    if body.ollama_model is not None:
+        row.ollama_model = body.ollama_model
+    if body.ollama_scoring_model is not None:
+        row.ollama_scoring_model = body.ollama_scoring_model
     await db.commit()
     await db.refresh(row)
     return row
