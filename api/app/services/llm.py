@@ -14,7 +14,14 @@ logger = logging.getLogger(__name__)
 
 # Scoring prompt — kept short for fast inference
 _SCORE_PROMPT = """You are evaluating a job posting for a new grad computer science candidate.
-Return ONLY valid JSON with these fields: score (float 0.0-1.0), reasoning (one sentence), tags (array of tech skills).
+Return ONLY valid JSON with these fields: score (float 0.0-1.0), reasoning (one sentence), tags (array of tech skills), experience_level (string).
+
+experience_level must be one of:
+- "intern": internship or co-op role
+- "entry": new grad, 0-2 years, junior, associate
+- "mid": 2-5 years experience, mid-level, Software Engineer II
+- "senior": senior, staff, principal, lead, 5+ years
+- "unknown": cannot determine from the information given
 
 Candidate profile: Recent CS graduate with internship experience. Strong in Python, Java, data structures, algorithms. Familiar with web development (React, Node.js) and cloud basics.
 
@@ -82,10 +89,11 @@ async def score_job(
                 "score": float(result.get("score", 0.5)),
                 "reasoning": str(result.get("reasoning", "")),
                 "tags": list(result.get("tags", [])),
+                "experience_level": str(result.get("experience_level", "unknown")),
             }
     except Exception as e:
         logger.warning(f"LLM scoring failed for '{title}' at '{company}': {e}")
-        return {"score": 0.5, "reasoning": "Scoring unavailable", "tags": []}
+        return {"score": 0.5, "reasoning": "Scoring unavailable", "tags": [], "experience_level": "unknown"}
 
 
 async def tailor_resume(
