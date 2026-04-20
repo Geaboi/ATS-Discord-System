@@ -27,6 +27,22 @@ function ScoreBar({ score }: { score: number | null }) {
   );
 }
 
+const LEVEL_STYLES: Record<string, string> = {
+  intern: "bg-purple-50 text-purple-600",
+  entry: "bg-blue-50 text-blue-600",
+  mid: "bg-amber-50 text-amber-600",
+  senior: "bg-red-50 text-red-600",
+};
+
+function ExperienceBadge({ level }: { level: string | null }) {
+  if (!level || level === "unknown" || !LEVEL_STYLES[level]) return null;
+  return (
+    <span className={`text-xs px-1.5 py-0.5 rounded font-medium ${LEVEL_STYLES[level]}`}>
+      {level.charAt(0).toUpperCase() + level.slice(1)}
+    </span>
+  );
+}
+
 function JobCard({ job, onApply }: { job: Job; onApply: (jobId: string) => void }) {
   const [dismissed, setDismissed] = useState(job.status === "dismissed");
   const [bookmarked, setBookmarked] = useState(job.status === "bookmarked");
@@ -60,6 +76,7 @@ function JobCard({ job, onApply }: { job: Job; onApply: (jobId: string) => void 
                 Remote
               </span>
             )}
+            <ExperienceBadge level={job.experience_level} />
           </div>
           <a
             href={job.url}
@@ -83,6 +100,8 @@ function JobCard({ job, onApply }: { job: Job; onApply: (jobId: string) => void 
                 <span className="text-emerald-600 font-medium">{salary}</span>
               </>
             )}
+            <span className="text-slate-300">·</span>
+            <span>{timeAgo(job.posted_at ?? job.scraped_at)}</span>
           </div>
         </div>
 
@@ -148,6 +167,7 @@ export default function DashboardPage() {
   const [scraping, setScraping] = useState(false);
   const [filter, setFilter] = useState<"new" | "bookmarked">("new");
   const [minScore, setMinScore] = useState<number>(0);
+  const [expLevel, setExpLevel] = useState<string>("");
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -158,12 +178,13 @@ export default function DashboardPage() {
         status: filter,
       });
       if (minScore > 0) params.set("min_score", String(minScore / 100));
+      if (expLevel) params.set("experience_level", expLevel);
       const res = await api.get<JobListResponse>(`/api/jobs?${params}`);
       setData(res);
     } finally {
       setLoading(false);
     }
-  }, [page, filter, minScore]);
+  }, [page, filter, minScore, expLevel]);
 
   useEffect(() => { load(); }, [load]);
 
@@ -241,6 +262,20 @@ export default function DashboardPage() {
             <option value={60}>60%+</option>
             <option value={70}>70%+</option>
             <option value={80}>80%+</option>
+          </select>
+        </div>
+        <div className="flex items-center gap-2 text-sm text-slate-600">
+          <span>Level:</span>
+          <select
+            value={expLevel}
+            onChange={(e) => { setExpLevel(e.target.value); setPage(1); }}
+            className="border border-slate-200 rounded-lg px-2 py-1.5 text-sm bg-white focus:outline-none"
+          >
+            <option value="">Any</option>
+            <option value="intern">Intern</option>
+            <option value="entry">Entry</option>
+            <option value="mid">Mid</option>
+            <option value="senior">Senior</option>
           </select>
         </div>
       </div>

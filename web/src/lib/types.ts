@@ -15,6 +15,7 @@ export interface Job {
   status: "new" | "bookmarked" | "dismissed";
   posted_at: string | null;
   scraped_at: string;
+  experience_level: string | null;
   notified: boolean;
 }
 
