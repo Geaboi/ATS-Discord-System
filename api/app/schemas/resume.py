@@ -26,3 +26,8 @@ class TailorStatus(BaseModel):
     status: str  # 'pending' | 'processing' | 'complete' | 'error'
     download_url: Optional[str] = None
     error: Optional[str] = None
+
+
+class ResumeAnalysis(BaseModel):
+    strengths: list[str]
+    weaknesses: list[str]

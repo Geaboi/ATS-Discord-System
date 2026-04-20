@@ -1,5 +1,6 @@
 import asyncio
 import uuid
+from collections import Counter
 from pathlib import Path
 from typing import Optional
 from uuid import UUID
@@ -13,7 +14,8 @@ from app.auth import get_current_user
 from app.config import get_settings
 from app.database import get_db
 from app.models import Resume
-from app.schemas.resume import ResumeOut, TailorRequest, TailorStatus
+from app.models.resume_score import ResumeScore
+from app.schemas.resume import ResumeOut, TailorRequest, TailorStatus, ResumeAnalysis
 
 router = APIRouter(prefix="/resumes", tags=["resumes"])
 
@@ -77,6 +79,34 @@ async def get_tailor_status(
     if not task:
         raise HTTPException(status_code=404, detail="Task not found")
     return TailorStatus(task_id=task_id, **task)
+
+
+@router.get("/{resume_id}/analysis", response_model=ResumeAnalysis)
+async def get_resume_analysis(
+    resume_id: UUID,
+    db: AsyncSession = Depends(get_db),
+    _: dict = Depends(get_current_user),
+):
+    resume = await db.get(Resume, resume_id)
+    if not resume:
+        raise HTTPException(status_code=404, detail="Resume not found")
+
+    stmt = (
+        select(ResumeScore)
+        .where(ResumeScore.resume_id == resume_id)
+        .order_by(ResumeScore.created_at.desc())
+        .limit(20)
+    )
+    result = await db.execute(stmt)
+    scores = result.scalars().all()
+
+    all_strengths = [s for row in scores for s in (row.strengths or [])]
+    all_weaknesses = [w for row in scores for w in (row.weaknesses or [])]
+
+    strengths = [item for item, _ in Counter(all_strengths).most_common(10)]
+    weaknesses = [item for item, _ in Counter(all_weaknesses).most_common(10)]
+
+    return ResumeAnalysis(strengths=strengths, weaknesses=weaknesses)
 
 
 @router.get("/{resume_id}", response_model=ResumeOut)

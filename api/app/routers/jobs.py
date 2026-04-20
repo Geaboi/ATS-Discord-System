@@ -1,19 +1,20 @@
 import math
+from collections import defaultdict
 from typing import Optional
 from uuid import UUID
 
 from fastapi import APIRouter, BackgroundTasks, Depends, HTTPException, Query, status
-from sqlalchemy import func, select, update
+from sqlalchemy import func, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.auth import get_current_user
 from app.database import get_db
-from app.models import Job, ScrapeRun
+from app.models import Job, ScrapeRun, Resume
+from app.models.resume_score import ResumeScore
 from app.schemas.job import JobListOut, JobOut, JobUpdate, ScrapeStatusOut, ScrapeRunOut
 
 router = APIRouter(prefix="/jobs", tags=["jobs"])
 
-# Flag to indicate a scrape is currently running (simple in-process guard)
 _scraping_now: bool = False
 
 
@@ -52,8 +53,27 @@ async def list_jobs(
     result = await db.execute(stmt)
     jobs = result.scalars().all()
 
+    # Batch-fetch best resume match per job
+    job_ids = [j.id for j in jobs]
+    resume_match_map: dict = {}
+    if job_ids:
+        rs_stmt = (
+            select(ResumeScore.job_id, func.max(ResumeScore.score).label("max_score"))
+            .join(Resume, ResumeScore.resume_id == Resume.id)
+            .where(Resume.is_master == True)
+            .where(ResumeScore.job_id.in_(job_ids))
+            .group_by(ResumeScore.job_id)
+        )
+        rs_result = await db.execute(rs_stmt)
+        resume_match_map = {row.job_id: row.max_score for row in rs_result}
+
+    items = [
+        JobOut.model_validate(j).model_copy(update={"resume_match": resume_match_map.get(j.id)})
+        for j in jobs
+    ]
+
     return JobListOut(
-        items=jobs,
+        items=items,
         total=total,
         page=page,
         limit=limit,
@@ -66,7 +86,6 @@ async def scrape_status(
     db: AsyncSession = Depends(get_db),
     _: dict = Depends(get_current_user),
 ):
-    # Get the most recent run per source
     stmt = (
         select(ScrapeRun)
         .order_by(ScrapeRun.started_at.desc())

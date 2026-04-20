@@ -22,6 +22,7 @@ class JobOut(BaseModel):
     relevance_score: Optional[float]
     score_reasoning: Optional[str]
     experience_level: Optional[str]
+    resume_match: Optional[float] = None
     status: str
     posted_at: Optional[datetime]
     scraped_at: datetime
