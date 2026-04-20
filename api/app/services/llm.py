@@ -73,7 +73,7 @@ async def score_job(
             response = await client.post(
                 f"{settings.ollama_base_url}/api/generate",
                 json={
-                    "model": settings.ollama_model,
+                    "model": settings.ollama_scoring_model,
                     "prompt": prompt,
                     "stream": False,
                     "format": "json",

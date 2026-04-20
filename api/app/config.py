@@ -18,6 +18,7 @@ class Settings(BaseSettings):
     # Ollama
     ollama_base_url: str = "http://ollama:11434"
     ollama_model: str = "llama3.1:8b"
+    ollama_scoring_model: str = "llama3.2:3b"
     ollama_timeout: int = 90
 
     # Scrapers
