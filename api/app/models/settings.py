@@ -19,6 +19,8 @@ class AppSettings(Base):
     discord_webhook: Mapped[str | None] = mapped_column(String)
     score_threshold: Mapped[float] = mapped_column(Float, default=0.65)
     scrape_interval: Mapped[int] = mapped_column(Integer, default=60)
+    ollama_model: Mapped[str | None] = mapped_column(String, nullable=True)
+    ollama_scoring_model: Mapped[str | None] = mapped_column(String, nullable=True)
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=utcnow, onupdate=utcnow, nullable=False
     )
