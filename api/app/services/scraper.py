@@ -3,15 +3,18 @@ Orchestrates all job source scrapers. Handles deduplication, scoring, DB inserts
 and Discord notifications.
 """
 import logging
+import uuid
 from datetime import datetime, timezone
 
 from sqlalchemy import select
+from sqlalchemy.dialects.postgresql import insert as pg_insert
 from sqlalchemy.exc import IntegrityError
 
 from app.config import get_settings
 from app.database import AsyncSessionLocal
-from app.models import Job, ScrapeRun
-from app.services.llm import score_job
+from app.models import Job, ScrapeRun, Resume
+from app.models.resume_score import ResumeScore
+from app.services.llm import score_job, rate_resume
 from app.services.discord_notifier import notify_new_job
 
 logger = logging.getLogger(__name__)
@@ -46,6 +49,13 @@ async def _run_source(source_name: str, module_path: str, func_name: str) -> Non
             raw_jobs: list[dict] = await fetch()
 
             run.jobs_found = len(raw_jobs)
+
+            # Fetch master resumes once for the entire run (not per job)
+            master_resumes_result = await db.execute(
+                select(Resume).where(Resume.is_master == True, Resume.extracted_text.isnot(None))
+            )
+            master_resumes = master_resumes_result.scalars().all()
+
             new_count = 0
             BATCH_SIZE = 10
 
@@ -110,6 +120,36 @@ async def _run_source(source_name: str, module_path: str, func_name: str) -> Non
                         source=job.source,
                     )
                     job.notified = True
+
+                # Score against master resumes
+                for resume in master_resumes:
+                    try:
+                        rating = await rate_resume(
+                            resume_text=resume.extracted_text,
+                            job_title=job.title,
+                            company=job.company,
+                            job_description=job_data.get("description") or "",
+                        )
+                        upsert_stmt = pg_insert(ResumeScore).values(
+                            id=uuid.uuid4(),
+                            resume_id=resume.id,
+                            job_id=job.id,
+                            score=rating["score"],
+                            strengths=rating["strengths"],
+                            weaknesses=rating["weaknesses"],
+                            created_at=datetime.now(timezone.utc),
+                        ).on_conflict_do_update(
+                            constraint="uq_resume_scores_resume_job",
+                            set_={
+                                "score": rating["score"],
+                                "strengths": rating["strengths"],
+                                "weaknesses": rating["weaknesses"],
+                                "created_at": datetime.now(timezone.utc),
+                            }
+                        )
+                        await db.execute(upsert_stmt)
+                    except Exception as e:
+                        logger.warning(f"Resume scoring failed for job '{job.title}': {e}")
 
                 # Commit every BATCH_SIZE jobs so they appear in the dashboard progressively
                 if new_count % BATCH_SIZE == 0:
