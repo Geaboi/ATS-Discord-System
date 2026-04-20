@@ -26,6 +26,7 @@ async def list_jobs(
     min_score: Optional[float] = Query(None),
     q: Optional[str] = Query(None),
     experience_level: Optional[str] = Query(None),
+    sort: Optional[str] = Query(None),  # "relevance" (default) or "date"
     db: AsyncSession = Depends(get_db),
     _: dict = Depends(get_current_user),
 ):
@@ -48,7 +49,10 @@ async def list_jobs(
     count_stmt = select(func.count()).select_from(stmt.subquery())
     total = (await db.execute(count_stmt)).scalar_one()
 
-    stmt = stmt.order_by(Job.relevance_score.desc().nullslast(), Job.scraped_at.desc())
+    if sort == "date":
+        stmt = stmt.order_by(Job.posted_at.desc().nullslast(), Job.scraped_at.desc())
+    else:
+        stmt = stmt.order_by(Job.relevance_score.desc().nullslast(), Job.scraped_at.desc())
     stmt = stmt.offset((page - 1) * limit).limit(limit)
     result = await db.execute(stmt)
     jobs = result.scalars().all()

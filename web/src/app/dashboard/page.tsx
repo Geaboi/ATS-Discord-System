@@ -181,6 +181,7 @@ export default function DashboardPage() {
   const [filter, setFilter] = useState<"new" | "bookmarked">("new");
   const [minScore, setMinScore] = useState<number>(0);
   const [expLevel, setExpLevel] = useState<string>("");
+  const [sortBy, setSortBy] = useState<"relevance" | "date">("relevance");
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -192,12 +193,13 @@ export default function DashboardPage() {
       });
       if (minScore > 0) params.set("min_score", String(minScore / 100));
       if (expLevel) params.set("experience_level", expLevel);
+      if (sortBy !== "relevance") params.set("sort", sortBy);
       const res = await api.get<JobListResponse>(`/api/jobs?${params}`);
       setData(res);
     } finally {
       setLoading(false);
     }
-  }, [page, filter, minScore, expLevel]);
+  }, [page, filter, minScore, expLevel, sortBy]);
 
   useEffect(() => { load(); }, [load]);
 
@@ -289,6 +291,17 @@ export default function DashboardPage() {
             <option value="entry">Entry</option>
             <option value="mid">Mid</option>
             <option value="senior">Senior</option>
+          </select>
+        </div>
+        <div className="flex items-center gap-2 text-sm text-slate-600">
+          <span>Sort:</span>
+          <select
+            value={sortBy}
+            onChange={(e) => { setSortBy(e.target.value as "relevance" | "date"); setPage(1); }}
+            className="border border-slate-200 rounded-lg px-2 py-1.5 text-sm bg-white focus:outline-none"
+          >
+            <option value="relevance">Relevance</option>
+            <option value="date">Post Date</option>
           </select>
         </div>
       </div>
