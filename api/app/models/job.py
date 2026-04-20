@@ -37,6 +37,7 @@ class Job(Base):
         DateTime(timezone=True), default=utcnow, nullable=False
     )
     notified: Mapped[bool] = mapped_column(Boolean, default=False)
+    experience_level: Mapped[str | None] = mapped_column(String, nullable=True)
 
     applications: Mapped[list["Application"]] = relationship(  # noqa: F821
         back_populates="job", cascade="all, delete-orphan"
