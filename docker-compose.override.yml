@@ -7,10 +7,6 @@ services:
     ports:
       - "5432:5432"
 
-  ollama:
-    ports:
-      - "11434:11434"
-
   api:
     build:
       context: ./api

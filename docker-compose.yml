@@ -16,24 +16,6 @@ services:
       timeout: 5s
       retries: 5
 
-  ollama:
-    build: ./ollama
-    restart: unless-stopped
-    volumes:
-      - ollama_models:/root/.ollama
-    networks:
-      - ats_net
-    deploy:
-      resources:
-        limits:
-          memory: 6g
-    healthcheck:
-      test: ["CMD-SHELL", "curl -sf http://localhost:11434/api/tags || exit 1"]
-      interval: 30s
-      timeout: 10s
-      retries: 10
-      start_period: 300s
-
   api:
     build: ./api
     restart: unless-stopped
@@ -46,8 +28,6 @@ services:
       - ats_net
     depends_on:
       db:
-        condition: service_healthy
-      ollama:
         condition: service_healthy
     healthcheck:
       test: ["CMD-SHELL", "curl -sf http://localhost:8000/api/settings/health || exit 1"]
@@ -99,7 +79,6 @@ services:
 
 volumes:
   postgres_data:
-  ollama_models:
   uploads:
   caddy_data:
   caddy_config:
