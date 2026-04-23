@@ -122,6 +122,38 @@ export default function SettingsPage() {
               />
             </div>
 
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                Tailoring Model
+              </label>
+              <select
+                value={settings.ollama_model || "llama3.1:8b"}
+                onChange={(e) => setSettings({ ...settings, ollama_model: e.target.value })}
+                className="w-full text-sm border border-slate-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary/30"
+              >
+                <option value="llama3.2:3b">llama3.2:3b — fast, low RAM</option>
+                <option value="llama3.1:8b">llama3.1:8b — balanced</option>
+                <option value="llama3.3:70b">llama3.3:70b — high quality</option>
+              </select>
+              <p className="text-xs text-slate-400 mt-1">Used for resume tailoring</p>
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                Scoring Model
+              </label>
+              <select
+                value={settings.ollama_scoring_model || "llama3.2:3b"}
+                onChange={(e) => setSettings({ ...settings, ollama_scoring_model: e.target.value })}
+                className="w-full text-sm border border-slate-200 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary/30"
+              >
+                <option value="llama3.2:3b">llama3.2:3b — fast, low RAM</option>
+                <option value="llama3.1:8b">llama3.1:8b — balanced</option>
+                <option value="llama3.3:70b">llama3.3:70b — high quality</option>
+              </select>
+              <p className="text-xs text-slate-400 mt-1">Used for job scoring and resume analysis</p>
+            </div>
+
             <button
               type="submit"
               disabled={saving}

@@ -77,6 +77,8 @@ export interface AppSettings {
   discord_webhook: string | null;
   score_threshold: number;
   scrape_interval: number;
+  ollama_model: string | null;
+  ollama_scoring_model: string | null;
 }
 
 export interface HealthStatus {
