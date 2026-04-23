@@ -72,9 +72,11 @@ async def score_job(
     title: str,
     company: str,
     description: str,
+    model: str | None = None,
 ) -> dict:
     """Score a job for relevance. Returns dict with score, reasoning, tags."""
     settings = get_settings()
+    _model = model or settings.ollama_scoring_model
 
     # Truncate description to ~800 words to keep tokens manageable
     desc_truncated = " ".join(description.split()[:800]) if description else ""
@@ -88,7 +90,7 @@ async def score_job(
             response = await client.post(
                 f"{settings.ollama_base_url}/api/generate",
                 json={
-                    "model": settings.ollama_scoring_model,
+                    "model": _model,
                     "prompt": prompt,
                     "stream": False,
                     "format": "json",
@@ -116,9 +118,11 @@ async def rate_resume(
     job_title: str,
     company: str,
     job_description: str,
+    model: str | None = None,
 ) -> dict:
     """Rate a resume against a job. Returns dict with score, strengths, weaknesses."""
     settings = get_settings()
+    _model = model or settings.ollama_scoring_model
 
     resume_truncated = " ".join(resume_text.split()[:600]) if resume_text else ""
     desc_truncated = " ".join(job_description.split()[:400]) if job_description else ""
@@ -135,7 +139,7 @@ async def rate_resume(
             response = await client.post(
                 f"{settings.ollama_base_url}/api/generate",
                 json={
-                    "model": settings.ollama_scoring_model,
+                    "model": _model,
                     "prompt": prompt,
                     "stream": False,
                     "format": "json",
@@ -162,9 +166,11 @@ async def tailor_resume(
     jd_text: str,
     job_title: str,
     company: str,
+    model: str | None = None,
 ) -> str:
     """Tailor a resume for a specific job. Returns the tailored resume text."""
     settings = get_settings()
+    _model = model or settings.ollama_model
 
     prompt = _TAILOR_PROMPT.format(
         title=job_title,
@@ -177,7 +183,7 @@ async def tailor_resume(
         response = await client.post(
             f"{settings.ollama_base_url}/api/generate",
             json={
-                "model": settings.ollama_model,
+                "model": _model,
                 "prompt": prompt,
                 "stream": False,
                 "options": {"temperature": 0.3, "num_predict": 2000},
