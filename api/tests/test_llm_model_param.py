@@ -57,3 +57,17 @@ async def test_tailor_resume_uses_passed_model():
         await tailor_resume("my resume", "job desc", "SWE", "Acme", model="llama3.2:3b")
 
     assert captured["body"]["model"] == "llama3.2:3b"
+
+
+@pytest.mark.anyio
+async def test_rate_resume_uses_passed_model():
+    """rate_resume sends the explicit model name to Ollama when provided."""
+    captured = {}
+    client = make_client(captured, {"response": json.dumps({
+        "score": 0.7, "strengths": ["Python"], "weaknesses": []
+    })})
+
+    with patch("app.services.llm.httpx.AsyncClient", return_value=client):
+        await rate_resume("resume text", "SWE", "Acme", "Python role", model="llama3.1:8b")
+
+    assert captured["body"]["model"] == "llama3.1:8b"
