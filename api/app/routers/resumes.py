@@ -207,7 +207,6 @@ async def _run_tailoring(
     from app.services.llm import tailor_resume as llm_tailor
     from app.database import AsyncSessionLocal
     from app.models.settings import AppSettings
-    from sqlalchemy import select
     import uuid
 
     _tailor_tasks[task_id]["status"] = "processing"
