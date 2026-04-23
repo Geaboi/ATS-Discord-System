@@ -13,6 +13,7 @@ from sqlalchemy.exc import IntegrityError
 from app.config import get_settings
 from app.database import AsyncSessionLocal
 from app.models import Job, ScrapeRun, Resume
+from app.models.settings import AppSettings
 from app.models.resume_score import ResumeScore
 from app.services.llm import score_job, rate_resume
 from app.services.discord_notifier import notify_new_job
@@ -42,6 +43,10 @@ async def _run_source(source_name: str, module_path: str, func_name: str) -> Non
         db.add(run)
         await db.commit()
         await db.refresh(run)
+
+        db_settings_result = await db.execute(select(AppSettings).where(AppSettings.id == 1))
+        db_settings = db_settings_result.scalar_one_or_none()
+        scoring_model = db_settings.ollama_scoring_model if db_settings else None
 
         try:
             module = importlib.import_module(module_path)
@@ -76,6 +81,7 @@ async def _run_source(source_name: str, module_path: str, func_name: str) -> Non
                     title=job_data["title"],
                     company=job_data["company"],
                     description=job_data.get("description") or "",
+                    model=scoring_model,
                 )
 
                 job = Job(
@@ -129,6 +135,7 @@ async def _run_source(source_name: str, module_path: str, func_name: str) -> Non
                             job_title=job.title,
                             company=job.company,
                             job_description=job_data.get("description") or "",
+                            model=scoring_model,
                         )
                         upsert_stmt = pg_insert(ResumeScore).values(
                             id=uuid.uuid4(),

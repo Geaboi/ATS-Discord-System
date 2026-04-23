@@ -206,11 +206,18 @@ async def _run_tailoring(
 ):
     from app.services.llm import tailor_resume as llm_tailor
     from app.database import AsyncSessionLocal
+    from app.models.settings import AppSettings
+    from sqlalchemy import select
     import uuid
 
     _tailor_tasks[task_id]["status"] = "processing"
     try:
-        tailored_text = await llm_tailor(resume_text, job_description, job_title, company)
+        async with AsyncSessionLocal() as db:
+            db_settings_result = await db.execute(select(AppSettings).where(AppSettings.id == 1))
+            db_settings = db_settings_result.scalar_one_or_none()
+            tailoring_model = db_settings.ollama_model if db_settings else None
+
+        tailored_text = await llm_tailor(resume_text, job_description, job_title, company, model=tailoring_model)
 
         # Save tailored resume as a text file
         out_dir = Path(upload_dir) / "tailored"
