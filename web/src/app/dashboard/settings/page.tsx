@@ -18,7 +18,11 @@ export default function SettingsPage() {
       api.get<HealthStatus>("/api/settings/health"),
       api.get<{ runs: ScrapeRun[]; scraping_now: boolean }>("/api/jobs/scrape/status"),
     ]);
-    setSettings(s);
+    setSettings({
+      ...s,
+      ollama_model: s.ollama_model ?? "llama3.1:8b",
+      ollama_scoring_model: s.ollama_scoring_model ?? "llama3.2:3b",
+    });
     setHealth(h);
     setScrapeStatus(sc);
   }
