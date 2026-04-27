@@ -1,0 +1,209 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 780" font-family="'Segoe UI', system-ui, sans-serif">
+  <!-- Background -->
+  <rect width="1100" height="780" fill="#0f1117"/>
+
+  <!-- ═══ ZONE: Internet / External ═══ -->
+  <rect x="10" y="10" width="220" height="300" rx="10" fill="none" stroke="#444" stroke-width="1.5" stroke-dasharray="6 3"/>
+  <text x="120" y="30" text-anchor="middle" fill="#888" font-size="11" font-weight="600" letter-spacing="1">EXTERNAL</text>
+
+  <!-- Job Sources -->
+  <rect x="25" y="45" width="190" height="34" rx="6" fill="#1e2433" stroke="#3d5a99" stroke-width="1.5"/>
+  <text x="120" y="67" text-anchor="middle" fill="#7eb3ff" font-size="12" font-weight="600">Adzuna API</text>
+
+  <rect x="25" y="90" width="190" height="34" rx="6" fill="#1e2433" stroke="#3d5a99" stroke-width="1.5"/>
+  <text x="120" y="112" text-anchor="middle" fill="#7eb3ff" font-size="12" font-weight="600">SimplifyJobs (GitHub)</text>
+
+  <rect x="25" y="135" width="190" height="34" rx="6" fill="#1e2433" stroke="#3d5a99" stroke-width="1.5"/>
+  <text x="120" y="157" text-anchor="middle" fill="#7eb3ff" font-size="12" font-weight="600">LinkedIn RSS</text>
+
+  <rect x="25" y="180" width="190" height="34" rx="6" fill="#1e2433" stroke="#3d5a99" stroke-width="1.5"/>
+  <text x="120" y="202" text-anchor="middle" fill="#7eb3ff" font-size="12" font-weight="600">Indeed RSS</text>
+
+  <!-- Discord Webhook -->
+  <rect x="25" y="250" width="190" height="46" rx="6" fill="#1e2433" stroke="#5865f2" stroke-width="2"/>
+  <text x="120" y="270" text-anchor="middle" fill="#8b95f5" font-size="12" font-weight="600">Discord</text>
+  <text x="120" y="287" text-anchor="middle" fill="#8b95f5" font-size="11">Webhook (HTTPS POST)</text>
+
+  <!-- ═══ ZONE: Docker Compose ═══ -->
+  <rect x="250" y="10" width="840" height="755" rx="10" fill="none" stroke="#334" stroke-width="1.5" stroke-dasharray="6 3"/>
+  <text x="670" y="30" text-anchor="middle" fill="#666" font-size="11" font-weight="600" letter-spacing="1">DOCKER COMPOSE</text>
+
+  <!-- ── Caddy ── -->
+  <rect x="268" y="45" width="180" height="60" rx="8" fill="#1a2a1a" stroke="#4caf50" stroke-width="2"/>
+  <text x="358" y="70" text-anchor="middle" fill="#81c784" font-size="13" font-weight="700">Caddy</text>
+  <text x="358" y="87" text-anchor="middle" fill="#81c784" font-size="10">HTTPS · Let's Encrypt · HSTS</text>
+
+  <!-- Browser/User -->
+  <rect x="268" y="130" width="180" height="46" rx="8" fill="#1a1a2e" stroke="#7c4dff" stroke-width="2"/>
+  <text x="358" y="150" text-anchor="middle" fill="#b39ddb" font-size="13" font-weight="700">Browser / User</text>
+  <text x="358" y="167" text-anchor="middle" fill="#b39ddb" font-size="10">Next.js dashboard</text>
+
+  <!-- ── Next.js ── -->
+  <rect x="460" y="45" width="195" height="130" rx="8" fill="#1a1a2e" stroke="#7c4dff" stroke-width="2"/>
+  <text x="557" y="68" text-anchor="middle" fill="#b39ddb" font-size="13" font-weight="700">Next.js 14</text>
+  <text x="557" y="84" text-anchor="middle" fill="#7c6fa0" font-size="10">App Router · Tailwind · shadcn/ui</text>
+  <line x1="475" y1="94" x2="640" y2="94" stroke="#3d3560" stroke-width="1"/>
+  <text x="557" y="111" text-anchor="middle" fill="#9e8fc0" font-size="10.5">Job Feed</text>
+  <text x="557" y="128" text-anchor="middle" fill="#9e8fc0" font-size="10.5">Pipeline Kanban (8 stages)</text>
+  <text x="557" y="145" text-anchor="middle" fill="#9e8fc0" font-size="10.5">Resumes · Settings</text>
+  <text x="557" y="163" text-anchor="middle" fill="#9e8fc0" font-size="10.5">JWT auth middleware</text>
+
+  <!-- ── FastAPI box ── -->
+  <rect x="460" y="200" width="450" height="370" rx="8" fill="#1a2420" stroke="#26a69a" stroke-width="2"/>
+  <text x="685" y="225" text-anchor="middle" fill="#4db6ac" font-size="14" font-weight="700">FastAPI (Python)</text>
+
+  <!-- Routers -->
+  <rect x="475" y="238" width="195" height="90" rx="6" fill="#162120" stroke="#2e7d6e" stroke-width="1.5"/>
+  <text x="572" y="257" text-anchor="middle" fill="#80cbc4" font-size="11" font-weight="600">Routers</text>
+  <text x="572" y="272" text-anchor="middle" fill="#80cbc4" font-size="9.5">auth · jobs · applications</text>
+  <text x="572" y="285" text-anchor="middle" fill="#80cbc4" font-size="9.5">resumes · settings</text>
+  <text x="572" y="300" text-anchor="middle" fill="#607d79" font-size="9">JWT cookie verification on all routes</text>
+  <text x="572" y="314" text-anchor="middle" fill="#607d79" font-size="9">BackgroundTask for async ops</text>
+
+  <!-- Scheduler -->
+  <rect x="685" y="238" width="210" height="58" rx="6" fill="#162120" stroke="#2e7d6e" stroke-width="1.5"/>
+  <text x="790" y="262" text-anchor="middle" fill="#80cbc4" font-size="11" font-weight="600">APScheduler</text>
+  <text x="790" y="279" text-anchor="middle" fill="#607d79" font-size="9.5">Periodic scrape (configurable interval)</text>
+  <text x="790" y="292" text-anchor="middle" fill="#607d79" font-size="9">Reads interval from app_settings</text>
+
+  <!-- Scraper Service -->
+  <rect x="475" y="348" width="195" height="90" rx="6" fill="#162120" stroke="#2e7d6e" stroke-width="1.5"/>
+  <text x="572" y="368" text-anchor="middle" fill="#80cbc4" font-size="11" font-weight="600">Scraper Service</text>
+  <text x="572" y="383" text-anchor="middle" fill="#607d79" font-size="9.5">Fetch → dedup by external_id</text>
+  <text x="572" y="397" text-anchor="middle" fill="#607d79" font-size="9.5">Score → rate → notify pipeline</text>
+  <text x="572" y="411" text-anchor="middle" fill="#607d79" font-size="9.5">Batch commit every 10 jobs</text>
+  <text x="572" y="425" text-anchor="middle" fill="#607d79" font-size="9">Writes ScrapeRun audit rows</text>
+
+  <!-- LLM Service -->
+  <rect x="685" y="348" width="210" height="90" rx="6" fill="#162120" stroke="#2e7d6e" stroke-width="1.5"/>
+  <text x="790" y="368" text-anchor="middle" fill="#80cbc4" font-size="11" font-weight="600">LLM Service</text>
+  <text x="790" y="385" text-anchor="middle" fill="#607d79" font-size="9.5">score_job()  temp=0.1 · 350 tok</text>
+  <text x="790" y="400" text-anchor="middle" fill="#607d79" font-size="9.5">rate_resume() temp=0.1 · 400 tok</text>
+  <text x="790" y="415" text-anchor="middle" fill="#607d79" font-size="9.5">tailor_resume() temp=0.3 · 2000 tok</text>
+  <text x="790" y="430" text-anchor="middle" fill="#607d79" font-size="9">httpx → Ollama /api/generate</text>
+
+  <!-- Resume Service -->
+  <rect x="475" y="458" width="195" height="56" rx="6" fill="#162120" stroke="#2e7d6e" stroke-width="1.5"/>
+  <text x="572" y="479" text-anchor="middle" fill="#80cbc4" font-size="11" font-weight="600">Resume Service</text>
+  <text x="572" y="496" text-anchor="middle" fill="#607d79" font-size="9.5">PDF / DOCX → plain text extraction</text>
+  <text x="572" y="509" text-anchor="middle" fill="#607d79" font-size="9">Stores text for LLM input</text>
+
+  <!-- Discord Notifier -->
+  <rect x="685" y="458" width="210" height="56" rx="6" fill="#162120" stroke="#2e7d6e" stroke-width="1.5"/>
+  <text x="790" y="479" text-anchor="middle" fill="#80cbc4" font-size="11" font-weight="600">Discord Notifier</text>
+  <text x="790" y="496" text-anchor="middle" fill="#607d79" font-size="9.5">Rich embed → webhook POST</text>
+  <text x="790" y="509" text-anchor="middle" fill="#607d79" font-size="9">Triggered inline during scrape</text>
+
+  <!-- Auth module note -->
+  <rect x="475" y="530" width="420" height="28" rx="5" fill="#111e1d" stroke="#1f4f4b" stroke-width="1"/>
+  <text x="685" y="549" text-anchor="middle" fill="#4db6ac" font-size="9.5">auth.py — JWT creation / bcrypt verify · HttpOnly Secure SameSite=Strict cookie</text>
+
+  <!-- ── PostgreSQL ── -->
+  <rect x="268" y="590" width="340" height="155" rx="8" fill="#1f1a10" stroke="#f9a825" stroke-width="2"/>
+  <text x="438" y="613" text-anchor="middle" fill="#ffcc02" font-size="13" font-weight="700">PostgreSQL 16</text>
+  <line x1="280" y1="622" x2="596" y2="622" stroke="#4a3d10" stroke-width="1"/>
+  <text x="358" y="640" text-anchor="middle" fill="#c8a832" font-size="10">jobs · scrape_runs</text>
+  <text x="358" y="655" text-anchor="middle" fill="#c8a832" font-size="10">applications · application_notes</text>
+  <text x="520" y="640" text-anchor="middle" fill="#c8a832" font-size="10">resumes · resume_scores</text>
+  <text x="520" y="655" text-anchor="middle" fill="#c8a832" font-size="10">app_settings</text>
+  <line x1="280" y1="665" x2="596" y2="665" stroke="#4a3d10" stroke-width="1"/>
+  <text x="438" y="683" text-anchor="middle" fill="#8a6e1a" font-size="9.5">async SQLAlchemy · Alembic migrations</text>
+  <text x="438" y="698" text-anchor="middle" fill="#8a6e1a" font-size="9.5">Port not exposed externally in production</text>
+  <text x="438" y="714" text-anchor="middle" fill="#8a6e1a" font-size="9.5">UUID primary keys · ARRAY columns for tags</text>
+  <text x="438" y="730" text-anchor="middle" fill="#8a6e1a" font-size="9.5">Unique constraint on external_id (dedup)</text>
+
+  <!-- ── Ollama ── -->
+  <rect x="630" y="590" width="280" height="100" rx="8" fill="#1f1020" stroke="#ab47bc" stroke-width="2"/>
+  <text x="770" y="615" text-anchor="middle" fill="#ce93d8" font-size="13" font-weight="700">Ollama (local via Tailscale)</text>
+  <text x="770" y="633" text-anchor="middle" fill="#9c6ba8" font-size="10">llama3.1:8b (default)</text>
+  <line x1="642" y1="642" x2="898" y2="642" stroke="#3d1f4a" stroke-width="1"/>
+  <text x="770" y="658" text-anchor="middle" fill="#9c6ba8" font-size="9.5">/api/generate endpoint</text>
+  <text x="770" y="673" text-anchor="middle" fill="#9c6ba8" font-size="9.5">Model override per operation in app_settings</text>
+
+  <!-- ── Discord Bot ── -->
+  <rect x="630" y="700" width="280" height="55" rx="8" fill="#1a1830" stroke="#5865f2" stroke-width="2"/>
+  <text x="770" y="720" text-anchor="middle" fill="#8b95f5" font-size="12" font-weight="700">Discord Alert Bot</text>
+  <text x="770" y="737" text-anchor="middle" fill="#6674cc" font-size="9.5">Polls DB every 5 min · asyncpg · no gateway</text>
+  <text x="770" y="750" text-anchor="middle" fill="#6674cc" font-size="9.5">Posts embed → marks notified=true</text>
+
+  <!-- ══════ ARROWS ══════ -->
+  <!-- User → Caddy -->
+  <line x1="358" y1="130" x2="358" y2="105" stroke="#7c4dff" stroke-width="1.5" marker-end="url(#arr-purple)"/>
+  <!-- Caddy → Next.js -->
+  <line x1="448" y1="75" x2="460" y2="90" stroke="#4caf50" stroke-width="1.5" stroke-dasharray="4 2" marker-end="url(#arr-green)"/>
+  <text x="453" y="71" fill="#4caf50" font-size="8">/* </text>
+  <!-- Caddy → API -->
+  <line x1="448" y1="85" x2="460" y2="290" stroke="#4caf50" stroke-width="1.5" stroke-dasharray="4 2" marker-end="url(#arr-green)"/>
+  <text x="452" y="200" fill="#4caf50" font-size="8">/api/*</text>
+
+  <!-- Next.js → Routers (API calls) -->
+  <line x1="557" y1="175" x2="557" y2="238" stroke="#7c4dff" stroke-width="1.5" stroke-dasharray="4 2" marker-end="url(#arr-purple)"/>
+  <text x="562" y="215" fill="#7c4dff" font-size="8">fetch /api</text>
+
+  <!-- Scheduler → Scraper -->
+  <line x1="790" y1="296" x2="667" y2="380" stroke="#26a69a" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+  <text x="735" y="335" fill="#26a69a" font-size="8">triggers</text>
+
+  <!-- Scraper → Sources -->
+  <line x1="475" y1="390" x2="240" y2="62" stroke="#3d5a99" stroke-width="1.2" stroke-dasharray="4 2" marker-end="url(#arr-blue)"/>
+
+  <!-- Scraper → LLM Service -->
+  <line x1="670" y1="390" x2="685" y2="390" stroke="#26a69a" stroke-width="1.5" marker-end="url(#arr-teal)"/>
+
+  <!-- Scraper → DB -->
+  <line x1="540" y1="438" x2="438" y2="590" stroke="#f9a825" stroke-width="1.5" marker-end="url(#arr-yellow)"/>
+
+  <!-- Scraper → Discord Notifier -->
+  <line x1="572" y1="458" x2="720" y2="480" stroke="#26a69a" stroke-width="1.2" stroke-dasharray="4 2" marker-end="url(#arr-teal)"/>
+
+  <!-- LLM → Ollama -->
+  <line x1="790" y1="438" x2="770" y2="590" stroke="#ab47bc" stroke-width="1.5" marker-end="url(#arr-purple2)"/>
+
+  <!-- Discord Notifier → Discord Webhook -->
+  <line x1="790" y1="514" x2="215" y2="273" stroke="#5865f2" stroke-width="1.2" stroke-dasharray="4 2" marker-end="url(#arr-indigo)"/>
+
+  <!-- Routers → DB -->
+  <line x1="490" y1="328" x2="400" y2="590" stroke="#f9a825" stroke-width="1.2" stroke-dasharray="4 2" marker-end="url(#arr-yellow)"/>
+
+  <!-- Bot → DB -->
+  <line x1="680" y1="727" x2="608" y2="680" stroke="#f9a825" stroke-width="1.5" marker-end="url(#arr-yellow)"/>
+
+  <!-- Bot → Discord Webhook -->
+  <line x1="630" y1="730" x2="215" y2="290" stroke="#5865f2" stroke-width="1.2" stroke-dasharray="4 2" marker-end="url(#arr-indigo)"/>
+
+  <!-- ══ Arrow markers ══ -->
+  <defs>
+    <marker id="arr-green" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto">
+      <polygon points="0 0, 7 3.5, 0 7" fill="#4caf50"/>
+    </marker>
+    <marker id="arr-purple" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto">
+      <polygon points="0 0, 7 3.5, 0 7" fill="#7c4dff"/>
+    </marker>
+    <marker id="arr-purple2" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto">
+      <polygon points="0 0, 7 3.5, 0 7" fill="#ab47bc"/>
+    </marker>
+    <marker id="arr-teal" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto">
+      <polygon points="0 0, 7 3.5, 0 7" fill="#26a69a"/>
+    </marker>
+    <marker id="arr-yellow" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto">
+      <polygon points="0 0, 7 3.5, 0 7" fill="#f9a825"/>
+    </marker>
+    <marker id="arr-blue" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto">
+      <polygon points="0 0, 7 3.5, 0 7" fill="#3d5a99"/>
+    </marker>
+    <marker id="arr-indigo" markerWidth="7" markerHeight="7" refX="5" refY="3.5" orient="auto">
+      <polygon points="0 0, 7 3.5, 0 7" fill="#5865f2"/>
+    </marker>
+  </defs>
+
+  <!-- ══ Legend ══ -->
+  <rect x="268" y="735" width="340" height="20" rx="4" fill="#111" stroke="#333" stroke-width="1"/>
+  <line x1="278" y1="745" x2="298" y2="745" stroke="#4caf50" stroke-width="1.5"/>
+  <text x="303" y="749" fill="#888" font-size="8.5">proxy route</text>
+  <line x1="355" y1="745" x2="375" y2="745" stroke="#26a69a" stroke-width="1.5"/>
+  <text x="380" y="749" fill="#888" font-size="8.5">internal call</text>
+  <line x1="440" y1="745" x2="460" y2="745" stroke="#f9a825" stroke-width="1.5"/>
+  <text x="465" y="749" fill="#888" font-size="8.5">DB read/write</text>
+  <line x1="522" y1="745" x2="542" y2="745" stroke="#5865f2" stroke-width="1.5" stroke-dasharray="3 2"/>
+  <text x="547" y="749" fill="#888" font-size="8.5">Discord webhook</text>
+</svg>

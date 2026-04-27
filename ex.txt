@@ -1,0 +1,1 @@
+  HASH=$(python3 -c "import bcrypt; print(bcrypt.hashpw(b'D12n2595', bcrypt.gensalt()).decode())") && python3 -c "import re, os; h = os.environ['HASH'].replace('\$', '\$\$'); c =  open('/home/ubuntu/ats/.env').read(); c = re.sub(r'AUTH_PASSWORD_HASH=[^\n]*', 'AUTH_PASSWORD_HASH=' + h, c); open('/home/ubuntu/ats/.env', 'w').write(c); print('Done:', h)"

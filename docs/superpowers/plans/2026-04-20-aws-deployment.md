@@ -809,6 +809,9 @@ Expected: `Docker version 27.x.x`
 git clone https://github.com/youruser/ATS-Discord-System.git /opt/ats
 cd /opt/ats
 ```
+ssh -i ~/Downloads/ats-key.pem ubuntu@18.119.189.58
+
+  icacls "C:\Users\dang1\Downloads\ats-system.pem" /inheritance:r /grant:r "dang1:R"
 
 ---
 
